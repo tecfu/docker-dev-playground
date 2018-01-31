@@ -145,6 +145,13 @@ RUN apt-get -y install oracle-java9-installer oracle-java9-set-default
 # R
 RUN apt-get install -y r-base r-base-dev
 
+# Julia
+RUN wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz
+RUN tar -xvf julia-0.6.2-linux-x86_64.tar.gz
+RUN JULIA=$(ls | grep julia | awk '!/gz/')
+RUN ln -s /root/$(ls | grep julia | awk '!/gz/')/bin/julia /usr/local/bin/julia
+
+
 # Run the following scripts when container is started
 #COPY ./boot.sh $HOME/boot.sh
 #RUN chmod +x $HOME/boot.sh
