@@ -14,10 +14,10 @@ $ csharp
 $ jshell
 ```
 
-- R
+- Julia
 
 ```
-$ R
+$ julia
 ```
 
 - Nodejs
@@ -26,8 +26,16 @@ $ R
 $ node
 ```
 
-- Julia
+- Python
+
+``` 
+$ python
+```
+
+- R
 
 ```
-$ julia
+$ R
 ```
+
+
