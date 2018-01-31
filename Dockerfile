@@ -129,12 +129,6 @@ RUN apt-get update
 # Install Languages
 ##############################
 
-# Nodejs
-RUN apt-get install -y nodejs 
-
-# Mono
-RUN apt-get install mono-devel -y
-
 # Java 9 
 RUN echo debconf shared/accepted-oracle-license-v1-1 select true | \
   debconf-set-selections
@@ -142,14 +136,21 @@ RUN echo debconf shared/accepted-oracle-license-v1-1 seen true | \
   debconf-set-selections
 RUN apt-get -y install oracle-java9-installer oracle-java9-set-default
 
-# R
-RUN apt-get install -y r-base r-base-dev
-
 # Julia
 RUN wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz
 RUN tar -xvf julia-0.6.2-linux-x86_64.tar.gz
 RUN JULIA=$(ls | grep julia | awk '!/gz/')
 RUN ln -s /root/$(ls | grep julia | awk '!/gz/')/bin/julia /usr/local/bin/julia
+
+# Mono
+RUN apt-get install mono-devel -y
+RUN apt-get install nuget -y
+
+# Nodejs
+RUN apt-get install -y nodejs 
+
+# R
+RUN apt-get install -y r-base r-base-dev
 
 
 # Run the following scripts when container is started
