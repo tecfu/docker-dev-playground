@@ -8,6 +8,12 @@
 $ csharp
 ```
 
+- DotNet
+
+```
+$ dotnet
+```
+
 - Java [via Java 9]
 
 ```
