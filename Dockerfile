@@ -103,6 +103,9 @@ RUN apt-get clean && apt-get autoremove -y
 # Language Repos
 ##############################
 
+# Add Erlang repo
+RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && dpkg -i erlang-solutions_1.0_all.deb
+
 # Add Nodejs repo
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
@@ -129,6 +132,10 @@ RUN apt-get update
 # Install Languages
 ##############################
 
+# Erlang
+RUN apt-get install esl-erlang
+RUN apt-get install elixir
+
 # Java 9 
 RUN echo debconf shared/accepted-oracle-license-v1-1 select true | \
   debconf-set-selections
@@ -151,7 +158,6 @@ RUN apt-get install -y nodejs
 
 # R
 RUN apt-get install -y r-base r-base-dev
-
 
 # Run the following scripts when container is started
 #COPY ./boot.sh $HOME/boot.sh
