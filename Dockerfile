@@ -106,6 +106,12 @@ RUN apt-get clean && apt-get autoremove -y
 # Add Erlang repo
 RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && dpkg -i erlang-solutions_1.0_all.deb
 
+# Add DotNet repo
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+RUN mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+RUN sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
+RUN apt-get install apt-transport-https -y
+
 # Add Nodejs repo
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
@@ -135,6 +141,9 @@ RUN apt-get update
 # Erlang
 RUN apt-get install esl-erlang
 RUN apt-get install elixir
+
+# DotNet
+RUN apt-get install dotnet-sdk-2.1.4 -y
 
 # Java 9 
 RUN echo debconf shared/accepted-oracle-license-v1-1 select true | \
