@@ -1,6 +1,8 @@
 # docker-dev-playground
 
-## A Docker image full of REPLS
+## A Docker image full of REPLS and programming languages
+
+See [https://hub.docker.com/r/tecfu/docker-dev-playground/](https://hub.docker.com/r/tecfu/docker-dev-playground/)
 
 - C# [via mono]
 
