@@ -142,6 +142,9 @@ RUN apt-get update
 RUN apt-get install esl-erlang
 RUN apt-get install elixir
 
+# Phoenix Framework
+RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez
+
 # DotNet
 RUN apt-get install dotnet-sdk-2.1.4 -y
 
