@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y apt-utils
 # Install common / shared packages
 RUN apt-get install -y \
     curl \
+    wget \
     git \
     zip \
     unzip \
@@ -122,8 +123,8 @@ RUN add-apt-repository -y ppa:ondrej/php
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
 RUN echo "deb http://download.mono-project.com/repo/ubuntu xenial main" | tee /etc/apt/sources.list.d/mono-official.list
 
-# Add Java9 repo
-RUN add-apt-repository ppa:webupd8team/java
+# Add Java10 repo
+RUN add-apt-repository ppa:linuxuprising/java
 
 # Add R repo
 RUN echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | tee -a /etc/apt/sources.list
@@ -139,8 +140,7 @@ RUN apt-get update
 ##############################
 
 # Erlang
-RUN apt-get install esl-erlang
-RUN apt-get install elixir
+RUN apt-get install -y esl-erlang elixir
 
 # Phoenix Framework
 RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez
@@ -148,12 +148,12 @@ RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/
 # DotNet
 RUN apt-get install dotnet-sdk-2.1.4 -y
 
-# Java 9 
+# Java 10 
 RUN echo debconf shared/accepted-oracle-license-v1-1 select true | \
   debconf-set-selections
 RUN echo debconf shared/accepted-oracle-license-v1-1 seen true | \
   debconf-set-selections
-RUN apt-get -y install oracle-java9-installer oracle-java9-set-default
+RUN apt-get -y install oracle-java10-installer oracle-java10-set-default
 
 # Julia
 RUN wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz
