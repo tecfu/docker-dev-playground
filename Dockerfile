@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 MAINTAINER tecfu <>
 
-ENV REFRESHED_AT 2018-01-29
+ENV REFRESHED_AT 2018-04-29
 
 # Dont prompt for any installs
 # The ARG directive sets variables that only live during the build
@@ -113,8 +113,12 @@ RUN mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
 RUN sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
 RUN apt-get install apt-transport-https -y
 
-# Add Nodejs repo
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
+# Add nodejs repo
+# RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
+
+# Add yarn package manager for nodejs repo
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # Add PHP repo
 RUN add-apt-repository -y ppa:ondrej/php
@@ -166,7 +170,10 @@ RUN apt-get install mono-devel -y
 RUN apt-get install nuget -y
 
 # Nodejs
-RUN apt-get install -y nodejs 
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+RUN apt-get install -y yarn
+RUN export NVM_DIR="$HOME/.nvm" 
+RUN [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # R
 RUN apt-get install -y r-base r-base-dev
