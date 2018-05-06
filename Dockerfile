@@ -175,8 +175,15 @@ RUN git clone https://github.com/tecfu/docker-dev-playground
 RUN /bin/bash ./docker-dev-playground/install-nvm.sh
 RUN apt-get install -y yarn
 
+# Python 
+RUN apt-get install -y python2.7 python-pip
+RUN pip install --upgrade pip
+
 # R
 RUN apt-get install -y r-base r-base-dev
+
+# Tensor Flow
+RUN pip install tensorflow
 
 # Commands to run after container has started
 #ENTRYPOINT "nvm install lts/*" && /bin/bash

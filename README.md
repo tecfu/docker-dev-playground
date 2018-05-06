@@ -4,46 +4,48 @@
 
 See [https://hub.docker.com/r/tecfu/docker-dev-playground/](https://hub.docker.com/r/tecfu/docker-dev-playground/)
 
-- C# [via mono]
+### C# [via mono]
 
 ```
 $ csharp
 ```
 
-- DotNet
+### DotNet
 
 ```
 $ dotnet
 ```
 
-- Java [via Java 9]
+### Java [via Java 9]
 
 ```
 $ jshell
 ```
 
-- Julia
+### Julia
 
 ```
 $ julia
 ```
 
-- Nodejs
+### Nodejs
 
 ```
 $ node
 ```
 
-- Python
+### Python 2.7
 
 ``` 
 $ python
 ```
 
-- R
+### R
 
 ```
 $ R
 ```
+
+### Tensorflow
 
 
