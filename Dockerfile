@@ -170,26 +170,13 @@ RUN apt-get install nuget -y
 
 # Nodejs
 # Install nvm with node and npm
-# RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash 
-#ARG NVM_DIR="$HOME/.nvm"
-#RUN mkdir $NVM_DIR
-#RUN git clone https://github.com/creationix/nvm.git $NVM_DIR
-#WORKDIR $NVM_DIR
-#RUN git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)` 
-#RUN sh $NVM_DIR"/nvm.sh"
 WORKDIR $HOME
-#RUN echo '\nexport NVM_DIR="$HOME/.nvm"\n\ 
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm\n\
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion\n'\ >> .bashrc
-#RUN ./.bashrc && nvm install lts/*
 RUN git clone https://github.com/tecfu/docker-dev-playground 
-RUN ./docker-dev-playground/install-nvm.sh
-
-
-# RUN apt-get install -y yarn
+RUN /bin/bash ./docker-dev-playground/install-nvm.sh
+RUN apt-get install -y yarn
 
 # R
-# RUN apt-get install -y r-base r-base-dev
+RUN apt-get install -y r-base r-base-dev
 
 # Commands to run after container has started
 #ENTRYPOINT "nvm install lts/*" && /bin/bash
