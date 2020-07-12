@@ -1,51 +1,53 @@
 # docker-dev-playground
 
-## A Docker image full of REPLS and programming languages
+## A Docker Image for Development
+
+**SLIM VERSION**
 
 See [https://hub.docker.com/r/tecfu/docker-dev-playground/](https://hub.docker.com/r/tecfu/docker-dev-playground/)
 
-### C# [via mono]
+
+## Installation:
 
 ```
-$ csharp
+git clone https://github.com/tecfu/docker-dev-playground
+cd docker-dev-playground
+docker build --tag dev-docker .
 ```
 
-### DotNet
 
-```
-$ dotnet
-```
+## Run:
 
-### Java [via Java 9]
+- To start in `bash`
 
-```
-$ jshell
+*powershell*
+```powershell
+docker run -it -v ${PWD}:/home dev-docker /bin/bash 
 ```
 
-### Julia
-
-```
-$ julia
-```
-
-### Nodejs
-
-```
-$ node
+*bash*
+```sh
+docker run -it -v ${pwd}:/home dev-docker /bin/bash 
 ```
 
-### Python 2.7
 
-``` 
-$ python
+- To start in `zsh`
+
+*powershell*
+```powershell
+docker run -it -v ${PWD}:/home dev-docker zsh
 ```
 
-### R
-
+*bash*
+```sh
+docker run -it -v ${pwd}:/home dev-docker zsh
 ```
-$ R
-```
-
-### Tensorflow
 
 
+## Includes:
+
+- ctags
+- nodejs (via nvm)
+- tmux
+- vim
+- zsh

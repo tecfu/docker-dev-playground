@@ -8,4 +8,6 @@ echo 'export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> .bashrc
 
 source $HOME/.bashrc
-nvm install lts/*
+#nvm install lts/*
+nvm install 10.18.0
+nvm alias default 10.18.0
