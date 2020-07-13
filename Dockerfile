@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER tecfu <>
 
 # ENV REFRESHED_AT 2018-05-04
@@ -25,8 +25,8 @@ RUN apt-get install -y \
     zip \
     unzip \
     locales \
-    software-properties-common \
-    python-software-properties 
+    software-properties-common
+
 
 # Set up locales
 RUN locale-gen en_US.UTF-8
@@ -34,6 +34,17 @@ ENV LANG C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 RUN /usr/sbin/update-locale
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
+
+# Terminal Customization
+WORKDIR $HOME
+RUN git clone https://github.com/tecfu/.terminal
+RUN /bin/bash .terminal/INSTALL.sh
+
+# zsh
+# Uses "robbyrussell" theme (original Oh My Zsh theme), with no plugins
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- \
+    -t robbyrussell
 
 
 ##############################
@@ -41,99 +52,99 @@ RUN /usr/sbin/update-locale
 ##############################
 
 
-# Vim 8 custom build
-RUN apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev \
-    libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
-    libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev \
-    python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev git dh-autoreconf
-WORKDIR $HOME
-RUN git clone https://github.com/vim/vim.git
-WORKDIR $HOME/vim
-RUN ./configure --with-features=huge \
-           --enable-multibyte \
-           --enable-rubyinterp=yes \
-           --enable-pythoninterp=yes \
-           --with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \
-           --enable-python3interp=yes \
-           --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
-           --enable-perlinterp=yes \
-           --enable-luainterp=yes \
- #         --enable-gui=gtk2 \
-           --enable-cscope \
-           --prefix=/usr/local
-RUN make VIMRUNTIMEDIR=/usr/local/share/vim/vim80
-RUN make install
-# Install Vim plugins
-#RUN vim +PlugInstall +qall 
-#RUN apt-get install -y vim 
-
 # Install tmux
 RUN apt-get -y install tmux
 
+# Install vim
+# Vim 8 custom build
+#RUN apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev \
+#    libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
+#    libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev \
+#    python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev git dh-autoreconf
+#
+#WORKDIR $HOME
+#RUN git clone https://github.com/vim/vim.git
+#WORKDIR $HOME/vim
+#RUN ./configure --with-features=huge \
+#           --enable-multibyte \
+#           --enable-rubyinterp=yes \
+#           --enable-pythoninterp=yes \
+#           --with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \
+#           --enable-python3interp=yes \
+#           --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
+#           --enable-perlinterp=yes \
+#           --enable-luainterp=yes \
+# #         --enable-gui=gtk2 \
+#           --enable-cscope \
+#           --prefix=/usr/local
+#RUN make VIMRUNTIMEDIR=/usr/local/share/vim/vim82
+#RUN make install
+
+RUN add-apt-repository -y ppa:jonathonf/vim
+RUN apt update -y
+RUN apt install make gcc vim -y
+
+# Vim Customization
+WORKDIR $HOME
+RUN git clone https://github.com/tecfu/.vim.git
+RUN /bin/bash .vim/INSTALL.sh
+# Install Vim plugins
+RUN vim +PlugInstall +qall 
+
+
 # Install Universal CTAGS
 WORKDIR $HOME
+RUN apt install -y \
+    gcc make \
+    pkg-config autoconf automake \
+    python3-docutils \
+    libseccomp-dev \
+    libjansson-dev \
+    libyaml-dev \
+    libxml2-dev
 RUN git clone https://github.com/universal-ctags/ctags
 WORKDIR $HOME/ctags
 RUN ./autogen.sh
 RUN ./configure
 RUN make
 RUN make install
-
-
-# Terminal, Vim Customization
 WORKDIR $HOME
-RUN git clone https://github.com/tecfu/dotfiles 
-
-# Create symlinks to bash config
-RUN mv $HOME/.bashrc $HOME/.bashrc.saved
-RUN ln -s $HOME/dotfiles/terminal/.bashrc $HOME/.bashrc
-RUN ln -s $HOME/dotfiles/terminal/.inputrc $HOME/.inputrc
-
-# Vim
-# Create symlinks to vim config
-RUN ln -s $HOME/dotfiles/.vim $HOME/.vim
-RUN ln -s $HOME/dotfiles/.vim/.vimrc $HOME/.vimrc
 
 # Clean up apt cache and temp files to save disk space
-# RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+#RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN apt-get clean && apt-get autoremove -y
 
 
-
-##############################
-# Language Repos
-##############################
+###############################
+## Language Repos
+###############################
 
 # Add Erlang repo
-RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && dpkg -i erlang-solutions_1.0_all.deb
+RUN wget -O- https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | apt-key add -
+RUN echo "deb https://packages.erlang-solutions.com/ubuntu bionic contrib" | tee /etc/apt/sources.list.d/rabbitmq.list
 
 # Add DotNet repo
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-RUN mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
-RUN sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
 RUN apt-get install apt-transport-https -y
+RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN apt-get -y update
+RUN apt-get install -y dotnet-sdk-2.2
 
 # Add nodejs repo
-# RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
-
-# Add yarn package manager for nodejs repo
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # Add PHP repo
 RUN add-apt-repository -y ppa:ondrej/php
 
 # Add Mono repo
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-RUN echo "deb http://download.mono-project.com/repo/ubuntu xenial main" | tee /etc/apt/sources.list.d/mono-official.list
+RUN echo "deb http://download.mono-project.com/repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/mono-official.list
 
-# Add Java10 repo
-RUN add-apt-repository ppa:linuxuprising/java
+# Add Java11 repo
 
 # Add R repo
-RUN echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | tee -a /etc/apt/sources.list
-RUN gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
-RUN gpg -a --export E084DAB9 | apt-key add -
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'
 
 RUN apt-get update
 
@@ -149,14 +160,10 @@ RUN apt-get install -y esl-erlang elixir
 RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez
 
 # DotNet
-RUN apt-get install dotnet-sdk-2.1.4 -y
+RUN apt-get install dotnet-sdk-2.2 -y
 
-# Java 10 
-RUN echo debconf shared/accepted-oracle-license-v1-1 select true | \
-  debconf-set-selections
-RUN echo debconf shared/accepted-oracle-license-v1-1 seen true | \
-  debconf-set-selections
-RUN apt-get -y install oracle-java10-installer oracle-java10-set-default
+# Java 11
+
 
 # Julia
 RUN wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz
@@ -170,10 +177,9 @@ RUN apt-get install nuget -y
 
 # Nodejs
 # Install nvm with node and npm
-WORKDIR $HOME
-RUN git clone https://github.com/tecfu/docker-dev-playground 
-RUN /bin/bash ./docker-dev-playground/install-nvm.sh
-RUN apt-get install -y yarn
+ADD ./install-nvm.sh $HOME/
+RUN /bin/bash /root/install-nvm.sh
+# RUN apt-get install -y yarn
 
 # Python 
 RUN apt-get install -y python2.7 python-pip
