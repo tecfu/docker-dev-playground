@@ -12,7 +12,7 @@ See [https://hub.docker.com/r/tecfu/docker-dev-playground/](https://hub.docker.c
 ```
 git clone https://github.com/tecfu/docker-dev-playground
 cd docker-dev-playground
-docker build --tag dev-docker .
+docker build --tag dev-slim .
 ```
 
 
@@ -22,12 +22,12 @@ docker build --tag dev-docker .
 
 *powershell*
 ```powershell
-docker run -it -v ${PWD}:/home dev-docker /bin/bash 
+docker run -it -v ${PWD}:/home dev-slim /bin/bash 
 ```
 
 *bash*
 ```sh
-docker run -it -v ${pwd}:/home dev-docker /bin/bash 
+docker run -it -v ${pwd}:/home dev-slim /bin/bash 
 ```
 
 
@@ -35,12 +35,12 @@ docker run -it -v ${pwd}:/home dev-docker /bin/bash
 
 *powershell*
 ```powershell
-docker run -it -v ${PWD}:/home dev-docker zsh
+docker run -it -v ${PWD}:/home dev-slim zsh
 ```
 
 *bash*
 ```sh
-docker run -it -v ${pwd}:/home dev-docker zsh
+docker run -it -v ${pwd}:/home dev-slim zsh
 ```
 
 
